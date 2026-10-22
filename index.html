@@ -1,0 +1,487 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>A little surprise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Gaegu:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blush:#f7d9de; --rose:#d4607a; --plum:#4a2433; --paper:#fff8f2;
+  --sage:#a9c3b2; --butter:#f6e2a0;
+  --hand:'Gaegu','Comic Sans MS',cursive; --serif:'DM Serif Display',Georgia,serif;
+}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{
+  font-family:var(--hand); font-size:20px; color:var(--plum);
+  background:
+    repeating-linear-gradient(90deg,#fbe6e9 0 38px,#fff4f1 38px 76px);
+  overflow-x:hidden;
+}
+#stage{min-height:100%;display:grid;place-items:center;padding:24px 16px 40px;position:relative}
+.page{width:min(920px,100%);text-align:center;animation:in .5s ease both}
+.page.out{animation:out .3s ease both}
+@keyframes in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes out{to{opacity:0;transform:translateY(-10px)}}
+
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,7vw,64px);line-height:1.05;color:var(--rose)}
+p.sub{margin-top:10px;opacity:.8}
+button{font:inherit;cursor:pointer;border:0}
+button:focus-visible,.pol:focus-visible{outline:3px solid var(--plum);outline-offset:3px}
+
+.btn{
+  background:var(--rose);color:#fff;padding:12px 30px;border-radius:999px;
+  font-weight:700;font-size:1.05em;box-shadow:0 4px 0 #a8445c;transition:transform .15s;
+}
+.btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a8445c}
+.btn.ghost{background:#fff;color:var(--rose);box-shadow:0 4px 0 #efc3cb}
+.next{margin-top:26px}
+
+/* page 1 */
+.ask{display:flex;gap:18px;justify-content:center;align-items:center;margin-top:34px;min-height:70px}
+#yes{transition:transform .25s}
+
+/* keypad */
+.pad{
+  width:min(300px,100%);margin:26px auto 0;background:var(--blush);padding:20px;border-radius:22px;
+  border:3px dashed #fff;box-shadow:0 10px 30px #d4607a33;
+}
+.dots{display:flex;gap:12px;justify-content:center;margin-bottom:16px;height:20px}
+.dots i{width:16px;height:16px;border-radius:50%;border:2px solid var(--rose)}
+.dots i.on{background:var(--rose)}
+.keys{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.keys button{
+  aspect-ratio:1;border-radius:50%;background:#fff;color:var(--rose);font-size:1.5em;font-weight:700;
+  box-shadow:0 3px 0 #efc3cb;
+}
+.keys button:active{transform:translateY(2px)}
+.shake{animation:shake .4s}
+@keyframes shake{25%{transform:translateX(-9px)}75%{transform:translateX(9px)}}
+#hint{height:24px;margin-top:12px;color:var(--rose)}
+
+/* polaroids */
+.board{position:relative;display:flex;flex-wrap:wrap;justify-content:center;gap:22px;margin-top:30px}
+.pol{
+  background:#fff;padding:10px 10px 6px;width:170px;box-shadow:0 8px 18px #4a243322;
+  transform:rotate(var(--r,-3deg));position:relative;cursor:pointer;transition:transform .2s;
+}
+.pol:hover{transform:rotate(0) scale(1.04);z-index:3}
+.pol::before{
+  content:"";position:absolute;top:-12px;left:50%;width:70px;height:22px;margin-left:-35px;
+  background:#f6e2a0cc;transform:rotate(-4deg);
+}
+.pol .frame{aspect-ratio:1;background:linear-gradient(135deg,#f9c9d2,#cfe0d5);display:grid;place-items:center;overflow:hidden}
+.pol img{width:100%;height:100%;object-fit:cover;display:block}
+.pol .ph{font-size:2em;color:#fff;line-height:1}
+.pol .ph small{display:block;font-size:.45em;margin-top:4px}
+.pol figcaption{padding-top:6px;font-size:.95em;min-height:28px}
+
+.ransom{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin-top:30px}
+.ransom span{
+  padding:2px 10px;font-family:var(--serif);font-size:clamp(26px,5vw,40px);
+  transform:rotate(var(--r));background:var(--c);color:var(--t,#fff);
+}
+.note{
+  display:inline-block;background:var(--butter);padding:8px 16px;transform:rotate(2deg);
+  margin-top:20px;box-shadow:0 4px 10px #4a243322;
+}
+
+/* envelope */
+.env{
+  position:relative;width:min(340px,86vw);height:230px;margin:50px auto 0;cursor:pointer;
+  background:#f3b9c4;border-radius:6px;box-shadow:0 14px 30px #4a243333;
+}
+.env .flap{
+  position:absolute;inset:0 0 auto 0;height:130px;background:#e99cab;transform-origin:top;
+  clip-path:polygon(0 0,100% 0,50% 100%);transition:transform .6s;z-index:3;
+}
+.env .paper{
+  position:absolute;left:12px;right:12px;top:12px;bottom:12px;background:var(--paper);
+  display:grid;place-items:center;font-family:var(--serif);font-size:1.6em;color:var(--rose);
+  transition:transform .7s .35s;z-index:1;
+}
+.env .front{
+  position:absolute;inset:0;background:#f6c6cf;z-index:2;border-radius:6px;
+  clip-path:polygon(0 0,50% 55%,100% 0,100% 100%,0 100%);
+}
+.env .seal{
+  position:absolute;left:50%;top:104px;width:44px;height:44px;margin-left:-22px;border-radius:50%;
+  background:var(--rose);color:#fff;display:grid;place-items:center;z-index:4;transition:opacity .3s;
+}
+.env.open .flap{transform:rotateX(180deg);z-index:0}
+.env.open .paper{transform:translateY(-110px)}
+.env.open .seal{opacity:0}
+.tap{margin-top:16px;opacity:.75}
+
+/* letter */
+.letter{
+  background:var(--paper);max-width:640px;margin:26px auto 0;padding:28px clamp(18px,5vw,40px);
+  text-align:left;line-height:1.5;font-size:1.1em;white-space:pre-wrap;min-height:260px;
+  box-shadow:0 10px 30px #4a243322;border-radius:4px;
+  background-image:repeating-linear-gradient(transparent 0 29px,#f0d4d9 29px 30px);
+  background-position:0 6px;
+}
+
+/* final */
+.final h1{margin-bottom:6px}
+.confetti{position:fixed;top:-20px;width:10px;height:14px;opacity:.9;animation:fall linear forwards;pointer-events:none;z-index:9}
+@keyframes fall{to{transform:translateY(110vh) rotate(720deg)}}
+
+/* floating hearts (ambient, slow) */
+.heart{position:fixed;bottom:-30px;color:var(--rose);opacity:.25;pointer-events:none;animation:rise linear forwards;z-index:0}
+@keyframes rise{to{transform:translateY(-110vh) translateX(var(--dx,0))}}
+.page{position:relative;z-index:1}
+
+/* music toggle */
+#music{position:fixed;top:14px;right:14px;z-index:10;width:44px;height:44px;border-radius:50%;background:#fff;color:var(--rose);font-size:1.3em;box-shadow:0 3px 0 #efc3cb}
+
+/* timeline */
+.timeline{max-width:520px;margin:30px auto 0;text-align:left;position:relative;padding-left:34px}
+.timeline::before{content:"";position:absolute;left:11px;top:6px;bottom:6px;border-left:3px dotted var(--rose)}
+.moment{position:relative;margin-bottom:22px;opacity:0;transform:translateX(-10px);transition:opacity .6s,transform .6s}
+.moment.show{opacity:1;transform:none}
+.moment::before{content:"♥";position:absolute;left:-34px;top:0;width:24px;height:24px;border-radius:50%;background:var(--rose);color:#fff;font-size:13px;display:grid;place-items:center}
+.moment b{font-family:var(--serif);font-weight:400;font-size:1.35em;color:var(--rose);display:block}
+
+/* reasons */
+.hearts{display:flex;flex-wrap:wrap;gap:16px;justify-content:center;margin-top:30px}
+.rh{
+  width:84px;height:84px;border-radius:50%;background:var(--rose);color:#fff;font-size:2em;
+  box-shadow:0 5px 0 #a8445c;transition:transform .2s;
+}
+.rh:hover{transform:scale(1.08)}
+.rh.done{background:#efc3cb;color:var(--rose);box-shadow:none}
+.reason{
+  max-width:480px;margin:26px auto 0;min-height:90px;padding:18px 22px;background:var(--paper);
+  font-size:1.25em;border-radius:6px;box-shadow:0 8px 20px #4a243322;display:grid;place-items:center;
+}
+.counter{margin-top:12px;opacity:.75}
+
+/* proposal */
+.proposal{padding:20px 0}
+.ring{font-size:84px;display:inline-block;animation:glow 2.4s ease-in-out infinite}
+@keyframes glow{50%{transform:scale(1.1) rotate(6deg);filter:drop-shadow(0 0 18px #f6e2a0)}}
+.pq{font-size:clamp(40px,9vw,78px)}
+.pbtns{position:relative;height:120px;margin-top:28px;display:flex;gap:20px;justify-content:center;align-items:flex-start}
+.pbtns .btn{font-size:1.25em;padding:14px 36px}
+#pno{transition:transform .25s}
+#pyes{transition:transform .25s}
+.big{font-size:clamp(34px,7vw,60px)}
+
+@media (max-width:520px){.pol{width:140px}}
+@media (prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<main id="stage" aria-live="polite"></main>
+<input type="file" id="picker" accept="image/*" hidden>
+
+<script>
+/* ========== EDIT THIS PART ========== */
+const CONFIG = {
+  name: "Anu",
+  password: "2909",
+  passwordHint: "Hint: you already know  (DDMM)",
+  photos: ["https://i.ibb.co/9H7Q16D8/IMG-20261019-153612.jpg", "https://i.ibb.co/vCm2Ddm4/IMG-20261019-152357.png", "https://i.ibb.co/TDSq1Lh0/IMG-20261019-153454.jpg", "https://i.ibb.co/RTt0wTmV/IMG-20261019-153756.jpg",
+"https://i.ibb.co/LXz57KPV/IMG-20261019-151626.png"],
+  captions: ["totally finished", "for this i have no words", "my favourite", "cozy", "silly", "forever"],
+  music: "",                            // optional: URL or file name of a song, e.g. "song.mp3" placed next to this file
+  story: [                              // your timeline: change these to your real moments
+    { when: "The day we met",     text: "I remember it was my 2nd cls yearly exam and you asked about me to divya." },
+    { when: "Our first date",     text: "it was never happened." },
+    { when: "The moment I fall",   text: "In that inter class Gk competition when you asked, when will you die, i didn't listened but i got this knew by shreya and fall that day." },
+    { when: "Today",               text: "Still choosing you, every single day." }
+  ],
+  reasons: [                            // tap-to-open hearts: write real, specific reasons
+    "phla wala trail hai dusra try kro.",
+    "Sorry tesre me paka kch likha hoga.",
+    "Gussa accha lgta hai tum pr.",
+    "Aise hi gusse me rha karo bhut pyari lgte ho ",
+    "Aur samne wale agr glt ho toh aise jawab diya kro the way you fight shreya for your parents respect, i totally liked that."
+  ],
+  proposal: {
+    title: "Will you be my partner?",
+    text: "sorry for this ye abhi edit kiya hu ye phle lga hua tha ",
+    yes: "Yes!",
+    no: "Let me think…",
+    celebrate: "She said yes! Forever starts now."
+  },
+  letter:
+`ye banya jis liye tha uske liye sorry.
+
+ye sb chij abhi edit krke  bhej rha hu phle ka bna tha uske liye sorry aur jitna  text edit kr pya hu itne time me utna krke bhej rha hu so for this i am genuinely sorry 
+
+I wish your happiness always and keep smiling and If there is any problem, feel free to ask me anytime.
+
+Be happy, keep similing `
+};
+/* ==================================== */
+
+const stage = document.getElementById('stage');
+const picker = document.getElementById('picker');
+const slots = [...CONFIG.photos];
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+function polaroid(i, rot) {
+  const img = slots[i];
+  return `<figure class="pol" data-slot="${i}" style="--r:${rot}deg" tabindex="0" role="button" aria-label="Photo ${i+1}, tap to change">
+    <div class="frame">${img ? `<img src="${img}" alt="">` : `<div class="ph">+<small>add photo</small></div>`}</div>
+    <figcaption>${CONFIG.captions[i] || ""}</figcaption></figure>`;
+}
+
+/* tap a polaroid to choose a photo */
+let pickIndex = null;
+document.addEventListener('click', e => {
+  const f = e.target.closest('.pol'); if (!f) return;
+  pickIndex = +f.dataset.slot; picker.click();
+});
+document.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.classList?.contains('pol')) { e.preventDefault(); e.target.click(); }
+});
+picker.addEventListener('change', () => {
+  const file = picker.files[0]; if (!file || pickIndex === null) return;
+  slots[pickIndex] = URL.createObjectURL(file);
+  document.querySelectorAll(`.pol[data-slot="${pickIndex}"] .frame`).forEach(el => {
+    el.innerHTML = `<img src="${slots[pickIndex]}" alt="">`;
+  });
+  picker.value = '';
+});
+
+/* ---------- pages ---------- */
+const pages = [
+
+  // 1. surprise question
+  { html: () => `
+    <h1>Do you want a surprise?</h1>
+    <p class="sub">Made just for ${CONFIG.name}</p>
+    <div class="ask">
+      <button class="btn" id="yes">YES!!</button>
+      <button class="btn ghost" id="no">NO</button>
+    </div>`,
+    init() {
+      const no = document.getElementById('no'), yes = document.getElementById('yes');
+      const lines = ["Are you sure?", "Really?", "Think again…", "Please?"];
+      let n = 0;
+      yes.onclick = () => go(1);
+      no.onclick = () => {
+        n++;
+        yes.style.transform = `scale(${1 + n * .25})`;
+        if (n > lines.length) { no.remove(); return; }
+        no.textContent = lines[n - 1];
+      };
+    } },
+
+  // 2. password
+  { html: () => `
+    <h1>Enter the password</h1>
+    <p class="sub">${CONFIG.passwordHint}</p>
+    <div class="pad" id="pad">
+      <div class="dots" id="dots"></div>
+      <div class="keys">
+        ${[1,2,3,4,5,6,7,8,9].map(n => `<button data-k="${n}">${n}</button>`).join('')}
+        <button data-k="c" aria-label="Clear">✕</button>
+        <button data-k="0">0</button>
+        <button data-k="b" aria-label="Delete">⌫</button>
+      </div>
+      <div id="hint" role="status"></div>
+    </div>`,
+    init() {
+      const len = CONFIG.password.length;
+      const dots = document.getElementById('dots'), hint = document.getElementById('hint'), pad = document.getElementById('pad');
+      let val = '';
+      const draw = () => dots.innerHTML = Array.from({length: len}, (_, i) => `<i class="${i < val.length ? 'on' : ''}"></i>`).join('');
+      draw();
+      pad.addEventListener('click', e => {
+        const k = e.target.closest('button')?.dataset.k; if (k === undefined) return;
+        if (k === 'c') val = ''; else if (k === 'b') val = val.slice(0, -1); else if (val.length < len) val += k;
+        hint.textContent = ''; draw();
+        if (val.length === len) {
+          if (val === CONFIG.password) setTimeout(() => go(2), 250);
+          else { pad.classList.add('shake'); hint.textContent = 'Not quite. Try again.';
+                 setTimeout(() => { pad.classList.remove('shake'); val = ''; draw(); }, 450); }
+        }
+      });
+    } },
+
+  // 3. scrapbook
+  { html: () => `
+    <h1>sorry</h1>
+    <div class="ransom" aria-hidden="true">${
+      "sorry".split('').map((c, i) => c === ' ' ? '<span style="--c:transparent"></span>' :
+        `<span style="--r:${[-4,3,-2,5,-3,2,-5][i % 7]}deg;--c:${['#d4607a','#a9c3b2','#f6e2a0','#f3b9c4'][i % 4]};--t:${i % 4 === 2 ? '#4a2433' : '#fff'}">${c}</span>`).join('')
+    }</div>
+    <div class="board">${polaroid(0,-4)}${polaroid(1,3)}${polaroid(2,-2)}</div>
+    <div class="note">sirf text edit kr pya hu itne time me agr kisi chij se problem ho toh sorry again sorry</div>
+    <div><button class="btn next" data-next>Next</button></div>` },
+
+  // 4. envelope
+  { html: () => `
+    <h1>A letter for you</h1>
+    <div class="env" id="env" role="button" tabindex="0" aria-label="Open the envelope">
+      <div class="paper">For ${CONFIG.name}</div>
+      <div class="flap"></div><div class="front"></div><div class="seal">♥</div>
+    </div>
+    <p class="tap" id="tap">Tap the envelope</p>
+    <div><button class="btn next" data-next id="envNext" hidden>Read it</button></div>`,
+    init() {
+      const env = document.getElementById('env');
+      const open = () => {
+        env.classList.add('open');
+        document.getElementById('tap').hidden = true;
+        setTimeout(() => document.getElementById('envNext').hidden = false, reduce ? 0 : 900);
+      };
+      env.onclick = open;
+      env.onkeydown = e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(); } };
+    } },
+
+  // 5. letter, typed out
+  { html: () => `
+    <h1>Dear ${CONFIG.name}</h1>
+    <div class="letter" id="letter" aria-label="Letter"></div>
+    <div><button class="btn next" data-next id="letterNext" hidden>One more thing</button></div>`,
+    init() {
+      const el = document.getElementById('letter'), nx = document.getElementById('letterNext');
+      const text = CONFIG.letter; let i = 0;
+      if (reduce) { el.textContent = text; nx.hidden = false; return; }
+      const tick = () => {
+        el.textContent = text.slice(0, ++i);
+        if (i < text.length) timer = setTimeout(tick, 28); else nx.hidden = false;
+      };
+      tick();
+      el.onclick = () => { clearTimeout(timer); el.textContent = text; nx.hidden = false; };
+    } },
+
+  // 6. our story
+  { html: () => `
+    <h1>Our story</h1>
+    <div class="timeline" id="tl">${CONFIG.story.map(s =>
+      `<div class="moment"><b>${s.when}</b>${s.text}</div>`).join('')}</div>
+    <div class="board">${polaroid(3,-3)}${polaroid(4,2)}</div>
+    <div><button class="btn next" data-next>Next</button></div>`,
+    init() {
+      document.querySelectorAll('.moment').forEach((m, i) =>
+        setTimeout(() => m.classList.add('show'), reduce ? 0 : 500 + i * 900));
+    } },
+
+  // 7. reasons I love you
+  { html: () => `
+    <h1>Reasons I love you</h1>
+    <p class="sub">Tap each heart</p>
+    <div class="hearts" id="hearts">${CONFIG.reasons.map((_, i) =>
+      `<button class="rh" data-i="${i}" aria-label="Reason ${i + 1}">♥</button>`).join('')}</div>
+    <div class="reason" id="reason" role="status">…</div>
+    <p class="counter" id="count"></p>
+    <div><button class="btn next" data-next id="rNext" hidden>I have one more question</button></div>`,
+    init() {
+      const seen = new Set(), box = document.getElementById('reason');
+      document.getElementById('hearts').addEventListener('click', e => {
+        const b = e.target.closest('.rh'); if (!b) return;
+        const i = +b.dataset.i; seen.add(i); b.classList.add('done');
+        box.textContent = CONFIG.reasons[i];
+        document.getElementById('count').textContent = `${seen.size} of ${CONFIG.reasons.length}`;
+        if (seen.size === CONFIG.reasons.length) document.getElementById('rNext').hidden = false;
+      });
+    } },
+
+  // 8. the proposal
+  { html: () => `
+    <div class="proposal">
+      <div class="ring" aria-hidden="true">💍</div>
+      <h1 class="pq">${CONFIG.proposal.title}</h1>
+      <p class="sub" style="max-width:520px;margin-inline:auto;font-size:1.15em">${CONFIG.proposal.text}</p>
+      <div class="pbtns">
+        <button class="btn" id="pyes">${CONFIG.proposal.yes}</button>
+        <button class="btn ghost" id="pno">${CONFIG.proposal.no}</button>
+      </div>
+    </div>`,
+    init() {
+      const yes = document.getElementById('pyes'), no = document.getElementById('pno');
+      let n = 0;
+      yes.onclick = () => go(8);
+      // the "no" button is playful: it grows the yes and eventually becomes a yes
+      no.onclick = () => {
+        n++;
+        yes.style.transform = `scale(${1 + n * .2})`;
+        no.style.transform = `scale(${Math.max(.5, 1 - n * .12)})`;
+        if (n === 1) no.textContent = "Are you sure? 🥺";
+        if (n === 2) no.textContent = "Think about it…";
+        if (n >= 3) { no.textContent = CONFIG.proposal.yes; no.onclick = () => go(8); no.classList.remove('ghost'); }
+      };
+    } },
+
+  // 9. celebration
+  { html: () => `
+    <div class="final">
+      <div class="ring" aria-hidden="true">💖</div>
+      <h1 class="big">${CONFIG.proposal.celebrate}</h1>
+      <p class="sub">sorry for this also, ${CONFIG.name}. keep similing </p>
+      <div class="board">${polaroid(0,-3)}${polaroid(1,2)}${polaroid(2,-2)}</div>
+      <div><button class="btn ghost next" onclick="go(0)">Watch again</button></div>
+    </div>`,
+    init() { confetti(); setTimeout(confetti, 2500); } }
+];
+
+/* ---------- navigation ---------- */
+let timer, current = -1;
+function go(n) {
+  clearTimeout(timer);
+  const old = stage.querySelector('.page');
+  const render = () => {
+    current = n;
+    stage.innerHTML = `<section class="page">${pages[n].html()}</section>`;
+    stage.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => go(n + 1)));
+    pages[n].init?.();
+    window.scrollTo(0, 0);
+  };
+  if (old && !reduce) { old.classList.add('out'); setTimeout(render, 280); } else render();
+}
+
+function confetti() {
+  if (reduce) return;
+  const colors = ['#d4607a', '#f3b9c4', '#f6e2a0', '#a9c3b2'];
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('span');
+    s.className = 'confetti';
+    s.style.left = Math.random() * 100 + 'vw';
+    s.style.background = colors[i % colors.length];
+    s.style.animationDuration = 2.5 + Math.random() * 3 + 's';
+    s.style.animationDelay = Math.random() * 1.2 + 's';
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 7500);
+  }
+}
+
+/* soft floating hearts in the background */
+if (!reduce) {
+  setInterval(() => {
+    const h = document.createElement('span');
+    h.className = 'heart'; h.textContent = '♥';
+    h.style.left = Math.random() * 100 + 'vw';
+    h.style.fontSize = 14 + Math.random() * 22 + 'px';
+    h.style.animationDuration = 9 + Math.random() * 8 + 's';
+    h.style.setProperty('--dx', (Math.random() * 80 - 40) + 'px');
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 18000);
+  }, 1400);
+}
+
+/* optional background music (set CONFIG.music to a file or URL) */
+if (CONFIG.music) {
+  const audio = new Audio(CONFIG.music); audio.loop = true;
+  const btn = document.createElement('button');
+  btn.id = 'music'; btn.textContent = '♪'; btn.setAttribute('aria-label', 'Play music');
+  btn.onclick = () => {
+    if (audio.paused) { audio.play(); btn.textContent = '❚❚'; btn.setAttribute('aria-label', 'Pause music'); }
+    else { audio.pause(); btn.textContent = '♪'; btn.setAttribute('aria-label', 'Play music'); }
+  };
+  document.body.appendChild(btn);
+}
+
+go(0);
+</script>
+</body>
+</html>
